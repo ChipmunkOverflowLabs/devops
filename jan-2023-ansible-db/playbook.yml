@@ -1,0 +1,30 @@
+- name: Provision PostgreSQL Database Servers
+  hosts: dbServers
+  become: true
+  vars_files:
+    - vars/dbSettings.yml
+  tasks:
+    - name: Install PostgreSQL server package
+      apt:
+        name: postgresql-15
+        state: present
+        update_cache: yes
+
+    - name: Configure database listener port
+      lineinfile:
+        path: /etc/postgresql/15/main/postgresql.conf
+        regexp: '^#?port ='
+        line: "port = {{ databasePort }}"
+      notify: restartPostgres
+
+    - name: Ensure PostgreSQL is running
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartPostgres
+      service:
+        name: postgresql
+        state: restarted

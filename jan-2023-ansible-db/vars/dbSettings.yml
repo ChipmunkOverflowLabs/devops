@@ -1,0 +1,6 @@
+databasePort: 5432
+databaseUser: "adminDbUser"
+maxConnectionsCount: 200
+sharedBuffersSize: "1024MB"
+enableQueryLogging: true
+passwordEncryptionType: "scram-sha-256"
