@@ -1,0 +1,24 @@
+name: deployPipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  buildAndTest:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkoutRepository
+      uses: actions/checkout@v3
+
+    - name: setupGoEnvironment
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+
+    - name: runUnitTests
+      run: go test -v ./...
+
+    - name: buildDockerImage
+      run: |
+        docker build -t app-image:latest .

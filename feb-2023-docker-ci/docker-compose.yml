@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  webApplication:
+    build:
+      context: .
+      target: buildStage
+    ports:
+      - "8080:8080"
+    environment:
+      - dbHost=databaseService
+      - dbPort=5432
+    depends_on:
+      - databaseService
+
+  databaseService:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=appDatabase
+      - POSTGRES_USER=appUser
+      - POSTGRES_PASSWORD=secureDbPassword
+    ports:
+      - "5432:5432"
