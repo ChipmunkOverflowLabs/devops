@@ -1,0 +1,41 @@
+- name: Install and Harden Nginx Web Server
+  hosts: webServers
+  become: true
+  vars_files:
+    - vars/nginxVars.yml
+  tasks:
+    - name: Install Nginx server package
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Apply secure configurations
+      copy:
+        content: |
+          user nginx;
+          worker_processes {{ nginxWorkerProcesses }};
+          events { worker_connections 1024; }
+          http {
+              ssl_protocols {{ sslProtocolsList }};
+              ssl_ciphers {{ sslCiphersSuite }};
+              client_max_body_size {{ clientMaxBodySize }};
+              gzip {{ 'on' if enableGzipCompression else 'off' }};
+          }
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restartNginxService
+
+    - name: Ensure Nginx is running and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartNginxService
+      service:
+        name: nginx
+        state: restarted

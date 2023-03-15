@@ -1,0 +1,6 @@
+nginxWorkerProcesses: "auto"
+sslProtocolsList: "TLSv1.3"
+sslCiphersSuite: "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
+clientMaxBodySize: "5M"
+enableGzipCompression: true
+enableHstsHeaders: true
