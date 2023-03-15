@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  namespace: routing-system
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    routingPriority: "high"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /auth(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-service
+            port:
+              name: secureHttp
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-service
+            port:
+              name: apiHttp
