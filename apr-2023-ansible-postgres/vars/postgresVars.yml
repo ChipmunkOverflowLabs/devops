@@ -1,0 +1,6 @@
+postgresVersion: "15"
+listenAddresses: "*"
+sharedBuffers: "256MB"
+enableSslMode: true
+sslCertFile: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+sslKeyFile: "/etc/ssl/private/ssl-cert-snakeoil.key"

@@ -1,0 +1,30 @@
+- name: Install and secure PostgreSQL Server
+  hosts: dbClusters
+  become: true
+  vars_files:
+    - vars/postgresVars.yml
+  tasks:
+    - name: Install PostgreSQL database package
+      apt:
+        name: "postgresql-{{ postgresVersion }}"
+        state: present
+        update_cache: yes
+
+    - name: Configure server parameters
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresVersion }}/main/postgresql.conf"
+        regexp: "^#?listen_addresses ="
+        line: "listen_addresses = '{{ listenAddresses }}'"
+      notify: restartPostgresService
+
+    - name: Ensure PostgreSQL service is active
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartPostgresService
+      service:
+        name: postgresql
+        state: restarted
