@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-instance
+spec:
+  serviceName: db-headless-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15.2
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "secureRootPassword"
+        ports:
+        - containerPort: 5432
+          name: databasePort
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
