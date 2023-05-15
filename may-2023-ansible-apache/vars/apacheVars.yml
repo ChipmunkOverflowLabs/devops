@@ -1,0 +1,4 @@
+apacheMaxClients: 250
+keepAliveTimeout: 5
+enableGzipFilter: true
+apacheLogLevel: "warn"

@@ -1,0 +1,30 @@
+- name: Install and optimize Apache Web Server
+  hosts: webCluster
+  become: true
+  vars_files:
+    - vars/apacheVars.yml
+  tasks:
+    - name: Install apache2 package
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Apply optimization variables to apache conf
+      lineinfile:
+        path: /etc/apache2/apache2.conf
+        regexp: "^KeepAliveTimeout"
+        line: "KeepAliveTimeout {{ keepAliveTimeout }}"
+      notify: restartApacheService
+
+    - name: Verify apache is enabled
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartApacheService
+      service:
+        name: apache2
+        state: restarted
