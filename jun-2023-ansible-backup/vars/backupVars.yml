@@ -1,0 +1,5 @@
+backupSourceDir: "/var/www/html"
+backupDestDir: "/mnt/backups/web"
+cronIntervalHour: "2"
+cronIntervalMinute: "0"
+backupLogPath: "/var/log/backup-job.log"

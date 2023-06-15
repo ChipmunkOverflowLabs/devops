@@ -1,0 +1,28 @@
+- name: Install and schedule periodic backup task
+  hosts: backupClients
+  become: true
+  vars_files:
+    - vars/backupVars.yml
+  tasks:
+    - name: Ensure destination directory exists
+      file:
+        path: "{{ backupDestDir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Install simple backup command script
+      copy:
+        content: |
+          #!/bin/bash
+          tar -czf {{ backupDestDir }}/backup-$(date +%F).tar.gz {{ backupSourceDir }} >> {{ backupLogPath }} 2>&1
+        dest: /usr/local/bin/run-backup.sh
+        mode: '0755'
+
+    - name: Schedule cron job configuration
+      cron:
+        name: "Execute backup job hourly"
+        minute: "{{ cronIntervalMinute }}"
+        hour: "{{ cronIntervalHour }}"
+        job: "/usr/local/bin/run-backup.sh"
