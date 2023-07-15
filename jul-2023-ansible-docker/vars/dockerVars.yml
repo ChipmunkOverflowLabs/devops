@@ -1,0 +1,3 @@
+dockerVersionString: "5:24.0"
+enableDockerCli: true
+dockerStorageDriver: "overlay2"

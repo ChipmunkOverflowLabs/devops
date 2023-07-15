@@ -1,0 +1,37 @@
+- name: Install and configure Docker Engine
+  hosts: dockerHosts
+  become: true
+  vars_files:
+    - vars/dockerVars.yml
+  tasks:
+    - name: Install prerequisite packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable"
+        state: present
+
+    - name: Install Docker CE
+      apt:
+        name: "docker-ce={{ dockerVersionString }}*"
+        state: present
+      notify: restartDockerService
+
+  handlers:
+    - name: restartDockerService
+      service:
+        name: docker
+        state: restarted
