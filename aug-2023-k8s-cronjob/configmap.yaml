@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-sync-config
+data:
+  dbSyncTargetName: "prod-db-sync"
+  backupCronSchedule: "0 1 * * *"
