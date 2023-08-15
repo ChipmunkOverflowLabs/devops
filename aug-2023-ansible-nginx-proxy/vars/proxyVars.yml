@@ -1,0 +1,3 @@
+backendPort: 8080
+upstreamHostAddress: "10.2.0.10"
+sslCertificatePath: "/etc/ssl/certs/proxy-cert.pem"
