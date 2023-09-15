@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker-app
+  template:
+    metadata:
+      labels:
+        app: worker-app
+    spec:
+      containers:
+      - name: app-worker
+        image: nginx:1.25.2
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
