@@ -1,0 +1,16 @@
+- name: Apply security updates and upgrade packages
+  hosts: patchTargetGroup
+  become: true
+  vars_files:
+    - vars/patchVars.yml
+  tasks:
+    - name: Upgrade all packages except excluded ones
+      apt:
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Reboot server if needed
+      reboot:
+        reboot_timeout: "{{ rebootTimeoutSeconds }}"
+        post_reboot_delay: "{{ postPatchDelay }}"

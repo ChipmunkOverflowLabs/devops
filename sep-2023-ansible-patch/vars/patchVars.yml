@@ -1,0 +1,3 @@
+excludePackagesList: [ "kernel", "libc" ]
+rebootTimeoutSeconds: 300
+postPatchDelay: 15
