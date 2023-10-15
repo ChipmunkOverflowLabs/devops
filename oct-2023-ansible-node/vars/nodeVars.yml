@@ -1,0 +1,2 @@
+nodeVersionString: "node_18.x"
+globalNpmPackages: [ "pm2", "yarn" ]

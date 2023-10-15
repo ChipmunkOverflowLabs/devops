@@ -1,0 +1,22 @@
+- name: Install and configure Node.js Runtime
+  hosts: appServers
+  become: true
+  vars_files:
+    - vars/nodeVars.yml
+  tasks:
+    - name: Add NodeSource GPG key and repository
+      shell: "curl -fsSL https://deb.nodesource.com/setup_18.x | bash -"
+      args:
+        warn: no
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+        update_cache: yes
+
+    - name: Install global npm packages list
+      npm:
+        name: "{{ item }}"
+        global: yes
+      loop: "{{ globalNpmPackages }}"
