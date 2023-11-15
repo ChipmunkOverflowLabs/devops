@@ -1,0 +1,32 @@
+- name: Harden SSH Daemon Configurations
+  hosts: hardenedHosts
+  become: true
+  vars_files:
+    - vars/sshVars.yml
+  tasks:
+    - name: Set SSH listening port
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?Port "
+        line: "Port {{ sshPortNumber }}"
+      notify: restartSshService
+
+    - name: Disable root login access
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PermitRootLogin "
+        line: "PermitRootLogin {{ permitRootLoginSetting }}"
+      notify: restartSshService
+
+    - name: Disable password login authentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PasswordAuthentication "
+        line: "PasswordAuthentication {{ passwordAuthenticationSetting }}"
+      notify: restartSshService
+
+  handlers:
+    - name: restartSshService
+      service:
+        name: sshd
+        state: restarted

@@ -1,0 +1,3 @@
+sshPortNumber: 2222
+permitRootLoginSetting: "no"
+passwordAuthenticationSetting: "no"
