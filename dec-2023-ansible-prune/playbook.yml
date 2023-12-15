@@ -1,0 +1,20 @@
+- name: Setup Cron Jobs to Prune Docker Dangling Resources
+  hosts: dockerNodes
+  become: true
+  vars_files:
+    - vars/pruneVars.yml
+  tasks:
+    - name: Create cron utility script to prune docker
+      copy:
+        content: |
+          #!/bin/bash
+          docker system prune -f {{ '--volumes' if enableVolumePruning else '' }}
+        dest: /usr/local/bin/docker-cleanup.sh
+        mode: '0755'
+
+    - name: Schedule cron daemon configuration
+      cron:
+        name: "Execute Docker system cleanup"
+        hour: "*/{{ pruneIntervalHours }}"
+        minute: "0"
+        job: "/usr/local/bin/docker-cleanup.sh"
