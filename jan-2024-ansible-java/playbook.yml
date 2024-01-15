@@ -1,0 +1,18 @@
+- name: Install and Configure OpenJDK Runtime
+  hosts: javaHosts
+  become: true
+  vars_files:
+    - vars/javaVars.yml
+  tasks:
+    - name: Install OpenJDK package
+      apt:
+        name: "openjdk-{{ javaVersionMajor }}-jdk"
+        state: present
+        update_cache: yes
+
+    - name: Set JAVA_HOME environment variable
+      lineinfile:
+        path: /etc/environment
+        line: "JAVA_HOME={{ javaHomePath }}"
+        state: present
+      when: setJavaHome
