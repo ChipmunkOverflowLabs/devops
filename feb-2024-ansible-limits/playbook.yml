@@ -1,0 +1,19 @@
+- name: Optimize Linux System Security Limits
+  hosts: limitHosts
+  become: true
+  vars_files:
+    - vars/limitVars.yml
+  tasks:
+    - name: Configure max open files limit for target user
+      pam_limits:
+        domain: "{{ targetSystemUser }}"
+        limit_type: "-"
+        limit_item: nofile
+        value: "{{ nofileLimitMax }}"
+
+    - name: Configure max process limit for target user
+      pam_limits:
+        domain: "{{ targetSystemUser }}"
+        limit_type: "-"
+        limit_item: nproc
+        value: "{{ nprocLimitMax }}"

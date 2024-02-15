@@ -1,0 +1,3 @@
+nofileLimitMax: 65536
+nprocLimitMax: 32768
+targetSystemUser: "appuser"
