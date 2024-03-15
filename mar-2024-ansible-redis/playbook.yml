@@ -1,0 +1,38 @@
+- name: Install and Tune Redis Key-Value Store
+  hosts: redisHosts
+  become: true
+  vars_files:
+    - vars/redisVars.yml
+  tasks:
+    - name: Install redis package
+      apt:
+        name: redis-server
+        state: present
+        update_cache: yes
+
+    - name: Configure listener port
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^port "
+        line: "port {{ redisPortNumber }}"
+      notify: restartRedisService
+
+    - name: Configure bind address
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^bind "
+        line: "bind {{ redisBindAddress }}"
+      notify: restartRedisService
+
+    - name: Configure max memory usage
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^#? ?maxmemory "
+        line: "maxmemory {{ maxMemoryLimit }}"
+      notify: restartRedisService
+
+  handlers:
+    - name: restartRedisService
+      service:
+        name: redis-server
+        state: restarted
