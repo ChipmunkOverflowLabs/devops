@@ -1,0 +1,17 @@
+- name: Install Docker Compose CLI Plugin
+  hosts: composeHosts
+  become: true
+  vars_files:
+    - vars/composeVars.yml
+  tasks:
+    - name: Create plugins directory structure
+      file:
+        path: "{{ installDirectoryPath }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker Compose binary file
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/{{ composeVersionString }}/docker-compose-linux-x86_64"
+        dest: "{{ installDirectoryPath }}/docker-compose"
+        mode: '0755'
