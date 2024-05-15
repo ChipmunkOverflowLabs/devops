@@ -1,0 +1,2 @@
+sysctlMaxConnections: 65535
+sysctlMemLimitBytes: 16777216

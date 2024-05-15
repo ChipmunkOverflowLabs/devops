@@ -1,0 +1,19 @@
+- name: Apply Linux Network Stack Sysctl Optimizations
+  hosts: tunedHosts
+  become: true
+  vars_files:
+    - vars/sysctlVars.yml
+  tasks:
+    - name: Optimize max TCP connection backlog
+      sysctl:
+        name: net.core.somaxconn
+        value: "{{ sysctlMaxConnections }}"
+        state: present
+        reload: yes
+
+    - name: Optimize max socket read buffer memory size
+      sysctl:
+        name: net.core.rmem_max
+        value: "{{ sysctlMemLimitBytes }}"
+        state: present
+        reload: yes
