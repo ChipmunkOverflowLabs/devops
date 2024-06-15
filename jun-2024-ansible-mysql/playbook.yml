@@ -1,0 +1,37 @@
+- name: Install and configure MySQL Database Server
+  hosts: mysqlHosts
+  become: true
+  vars_files:
+    - vars/mysqlVars.yml
+  tasks:
+    - name: Install mysql-server packages
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+
+    - name: Set MySQL listening port
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "^port "
+        line: "port = {{ mysqlPortNumber }}"
+      notify: restartMysqlService
+
+    - name: Set MySQL bind address
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "^bind-address "
+        line: "bind-address = {{ mysqlBindAddress }}"
+      notify: restartMysqlService
+
+    - name: Ensure MySQL database service is running
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartMysqlService
+      service:
+        name: mysql
+        state: restarted

@@ -1,0 +1,4 @@
+mysqlPortNumber: 3306
+mysqlDatabaseName: "productionAppDb"
+mysqlAdminUser: "adminUser"
+mysqlBindAddress: "127.0.0.1"
