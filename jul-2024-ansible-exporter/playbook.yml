@@ -1,0 +1,23 @@
+- name: Install and configure Prometheus Node Exporter
+  hosts: monitoringClients
+  become: true
+  vars_files:
+    - vars/exporterVars.yml
+  tasks:
+    - name: Create install directory
+      file:
+        path: "{{ installDirectory }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download exporter binary file
+      get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v{{ exporterVersionString }}/node_exporter-{{ exporterVersionString }}.linux-amd64.tar.gz"
+        dest: "/tmp/node_exporter.tar.gz"
+
+    - name: Extract download archive
+      unarchive:
+        src: "/tmp/node_exporter.tar.gz"
+        dest: "{{ installDirectory }}"
+        remote_src: yes
+        extra_opts: [--strip-components=1]

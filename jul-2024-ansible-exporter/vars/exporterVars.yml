@@ -1,0 +1,3 @@
+exporterVersionString: "1.7.0"
+metricsPortNumber: 9100
+installDirectory: "/opt/node_exporter"
