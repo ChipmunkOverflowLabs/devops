@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sticky-session-service
+  namespace: default
+spec:
+  selector:
+    app: web-server
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    name: httpPort
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
