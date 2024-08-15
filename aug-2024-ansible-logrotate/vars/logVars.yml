@@ -1,0 +1,3 @@
+rotateIntervalDays: "daily"
+keepRotatedLogsCount: 14
+nginxLogDir: "/var/log/nginx"

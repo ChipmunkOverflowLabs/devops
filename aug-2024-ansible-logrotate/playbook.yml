@@ -1,0 +1,26 @@
+- name: Setup Logrotate Configurations for Nginx Logs
+  hosts: nginxHosts
+  become: true
+  vars_files:
+    - vars/logVars.yml
+  tasks:
+    - name: Write logrotate configuration file
+      copy:
+        content: |
+          {{ nginxLogDir }}/*.log {
+              {{ rotateIntervalDays }}
+              missingok
+              rotate {{ keepRotatedLogsCount }}
+              compress
+              delaycompress
+              notifempty
+              create 0640 nginx adm
+              sharedscripts
+              postrotate
+                  prlimit --pid=$(cat /var/run/nginx.pid) --nofile=1024
+              endscript
+          }
+        dest: /etc/logrotate.d/nginx
+        owner: root
+        group: root
+        mode: '0644'
