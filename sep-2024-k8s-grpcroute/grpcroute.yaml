@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: grpc-telemetry-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: api-gateway
+  rules:
+  - matches:
+    - method:
+        service: telemetry.TelemetryService
+        method: StreamMetrics
+      headers:
+      - name: metricsType
+        value: "prometheusExport"
+    backendRefs:
+    - name: telemetry-backend-service
+      port: 9000
