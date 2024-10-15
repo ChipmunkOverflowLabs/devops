@@ -1,0 +1,3 @@
+fluentbitVersion: "3.0.0"
+elasticsearchHostAddress: "10.0.40.20"
+elasticsearchPort: 9200

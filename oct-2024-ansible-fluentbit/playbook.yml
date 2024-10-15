@@ -1,0 +1,44 @@
+- name: Install and configure Fluent Bit Logging Agent
+  hosts: logAgents
+  become: true
+  vars_files:
+    - vars/fluentVars.yml
+  tasks:
+    - name: Add Fluent Bit GPG key
+      apt_key:
+        url: https://packages.fluentbit.io/fluentbit.key
+        state: present
+
+    - name: Add Fluent Bit repository
+      apt_repository:
+        repo: "deb https://packages.fluentbit.io/ubuntu/jammy jammy main"
+        state: present
+
+    - name: Install Fluent Bit package
+      apt:
+        name: "fluent-bit"
+        state: present
+        update_cache: yes
+      notify: restartFluentbitService
+
+    - name: Write configuration rules
+      copy:
+        content: |
+          [SERVICE]
+              Flush        1
+              Log_Level    info
+          [INPUT]
+              Name         cpu
+          [OUTPUT]
+              Name         es
+              Match        *
+              Host         {{ elasticsearchHostAddress }}
+              Port         {{ elasticsearchPort }}
+        dest: /etc/fluent-bit/fluent-bit.conf
+      notify: restartFluentbitService
+
+  handlers:
+    - name: restartFluentbitService
+      service:
+        name: fluent-bit
+        state: restarted
