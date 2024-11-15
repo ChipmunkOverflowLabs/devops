@@ -1,0 +1,31 @@
+- name: Install and configure UFW Firewall Rules
+  hosts: firewallHosts
+  become: true
+  vars_files:
+    - vars/ufwVars.yml
+  tasks:
+    - name: Install UFW package
+      apt:
+        name: ufw
+        state: present
+        update_cache: yes
+
+    - name: Set UFW default deny rules
+      ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
+
+    - name: Allow SSH access port
+      ufw:
+        rule: allow
+        port: "{{ sshPortNumber }}"
+        proto: tcp
+      when: allowSshTraffic
+
+    - name: Allow HTTP access port
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+      when: allowHttpTraffic

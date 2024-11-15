@@ -1,0 +1,3 @@
+allowHttpTraffic: true
+allowSshTraffic: true
+sshPortNumber: 22
