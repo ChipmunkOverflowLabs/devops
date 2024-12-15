@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-app-configs
+data:
+  appVersionTag: "v2.5"
+  configSignatureHash: "a9f3b6c2d8"
