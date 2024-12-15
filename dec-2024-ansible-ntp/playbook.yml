@@ -1,0 +1,31 @@
+- name: Install and configure Chrony NTP Client
+  hosts: ntpClients
+  become: true
+  vars_files:
+    - vars/ntpVars.yml
+  tasks:
+    - name: Install chrony package
+      apt:
+        name: chrony
+        state: present
+        update_cache: yes
+
+    - name: Write NTP pool settings into chrony conf
+      lineinfile:
+        path: /etc/chrony/chrony.conf
+        regexp: "^pool "
+        line: "pool {{ item }} iburst"
+      loop: "{{ ntpServersList }}"
+      notify: restartChronyService
+
+    - name: Ensure Chrony service is active
+      service:
+        name: chrony
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restartChronyService
+      service:
+        name: chrony
+        state: restarted
