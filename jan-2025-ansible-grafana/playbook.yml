@@ -1,0 +1,30 @@
+- name: Install and configure Grafana Agent
+  hosts: telemetryNodes
+  become: true
+  vars_files:
+    - vars/grafanaVars.yml
+  tasks:
+    - name: Download Grafana Agent binary file
+      get_url:
+        url: "https://github.com/grafana/agent/releases/download/{{ grafanaAgentVersion }}/grafana-agent-linux-amd64.zip"
+        dest: "/tmp/grafana-agent.zip"
+
+    - name: Extract Grafana Agent archive
+      unarchive:
+        src: "/tmp/grafana-agent.zip"
+        dest: "/usr/local/bin"
+        remote_src: yes
+        mode: '0755'
+
+    - name: Write configuration template
+      copy:
+        content: |
+          metrics:
+            configs:
+            - name: default
+              remote_write:
+              - url: {{ metricsCollectorUrl }}
+                basic_auth:
+                  username: "grafana-user"
+                  password: {{ grafanaCloudToken }}
+        dest: /etc/grafana-agent.yaml

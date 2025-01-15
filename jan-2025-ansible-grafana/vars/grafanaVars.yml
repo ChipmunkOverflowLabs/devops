@@ -1,0 +1,3 @@
+grafanaCloudToken: "glc_abcdef123456"
+metricsCollectorUrl: "https://prometheus-us-central1.grafana.net/api/prom/push"
+grafanaAgentVersion: "v0.40.0"
