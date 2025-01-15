@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: database-access-grant
+  namespace: database-zone
+  labels:
+    grantScope: "crossNamespaceAccess"
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: gateway-zone
+  to:
+  - group: ""
+    kind: Service
+    name: postgres-db-service
