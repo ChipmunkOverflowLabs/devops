@@ -1,0 +1,19 @@
+- name: Apply Kernel Hardening Parameters
+  hosts: hardenedNodes
+  become: true
+  vars_files:
+    - vars/sysctlVars.yml
+  tasks:
+    - name: Disable core dumps configuration
+      sysctl:
+        name: fs.suid_dumpable
+        value: "0"
+        state: present
+        reload: yes
+
+    - name: Restrict access to kernel logs
+      sysctl:
+        name: kernel.dmesg_restrict
+        value: "1"
+        state: present
+        reload: yes
