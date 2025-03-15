@@ -1,0 +1,28 @@
+- name: Install and configure Logstash
+  hosts: logstashHosts
+  become: true
+  vars_files:
+    - vars/logstashVars.yml
+  tasks:
+    - name: Add Elastic GPG key
+      apt_key:
+        url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+
+    - name: Add Logstash repository
+      apt_repository:
+        repo: "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
+        state: present
+
+    - name: Install Logstash package
+      apt:
+        name: logstash
+        state: present
+        update_cache: yes
+      notify: restartLogstashService
+
+  handlers:
+    - name: restartLogstashService
+      service:
+        name: logstash
+        state: restarted

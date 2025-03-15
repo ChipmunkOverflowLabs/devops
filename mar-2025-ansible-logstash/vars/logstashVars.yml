@@ -1,0 +1,2 @@
+logstashPortNumber: 5044
+logstashHeapSize: "1g"
