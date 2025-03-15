@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: datastore-replica
+  namespace: default
+spec:
+  serviceName: datastore-service
+  replicas: 3
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      app: datastore
+  template:
+    metadata:
+      labels:
+        app: datastore
+    spec:
+      containers:
+      - name: datastore
+        image: redis:7.2-alpine
+        ports:
+        - containerPort: 6379
+          name: dbPort
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+  volumeClaimTemplates:
+  - metadata:
+      name: db-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
