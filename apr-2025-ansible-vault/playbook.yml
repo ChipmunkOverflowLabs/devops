@@ -1,0 +1,49 @@
+- name: Install and Configure Vault Agent
+  hosts: vaultClients
+  become: true
+  vars_files:
+    - vars/vaultVars.yml
+  tasks:
+    - name: Install gpg and curl tools
+      apt:
+        name: [gpg, curl]
+        state: present
+        update_cache: yes
+
+    - name: Add Vault GPG key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+
+    - name: Add Vault repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com jammy main"
+        state: present
+
+    - name: Install Vault package
+      apt:
+        name: vault
+        state: present
+      notify: restartVaultAgent
+
+    - name: Configure Vault agent daemon config
+      copy:
+        content: |
+          vault {
+            address = "{{ vaultServerAddress }}"
+          }
+          auto_auth {
+            method "token" {
+              config = {
+                token_file_path = "{{ agentTokenFilePath }}"
+              }
+            }
+          }
+        dest: /etc/vault.d/vault-agent.hcl
+      notify: restartVaultAgent
+
+  handlers:
+    - name: restartVaultAgent
+      service:
+        name: vault
+        state: restarted
