@@ -1,0 +1,4 @@
+nofileSoftLimit: 1048576
+nofileHardLimit: 1048576
+targetTunedUser: "databaseuser"
+restartSystemd: true

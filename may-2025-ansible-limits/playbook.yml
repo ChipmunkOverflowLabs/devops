@@ -1,0 +1,13 @@
+- name: Apply Advanced Linux OS System Limits Configurations
+  hosts: tunedServers
+  become: true
+  vars_files:
+    - vars/limitVars.yml
+  tasks:
+    - name: Create limits.d configuration overrides
+      copy:
+        content: |
+          {{ targetTunedUser }} soft nofile {{ nofileSoftLimit }}
+          {{ targetTunedUser }} hard nofile {{ nofileHardLimit }}
+        dest: "/etc/security/limits.d/99-tuned-limits.conf"
+        mode: '0644'
