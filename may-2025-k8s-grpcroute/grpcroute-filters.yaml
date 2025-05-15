@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: grpc-routing-filters
+  namespace: default
+spec:
+  parentRefs:
+  - name: internal-gateway
+  rules:
+  - matches:
+    - method:
+        service: user.UserService
+    filters:
+    - type: RequestHeaderModifier
+      requestHeaderModifier:
+        set:
+        - name: routingZone
+          value: "secureInternal"
+    backendRefs:
+    - name: user-backend-service
+      port: 50051
