@@ -1,0 +1,19 @@
+- name: Install and configure DDNS Update Client
+  hosts: ddnsHosts
+  become: true
+  vars_files:
+    - vars/ddnsVars.yml
+  tasks:
+    - name: Install ddclient package
+      apt:
+        name: ddclient
+        state: present
+        update_cache: yes
+
+    - name: Write configuration rules
+      copy:
+        content: |
+          protocol={{ dnsProviderType }}
+          daemon={{ dnsUpdateIntervalSeconds }}
+          password={{ apiAuthenticationKey }}
+        dest: /etc/ddclient.conf

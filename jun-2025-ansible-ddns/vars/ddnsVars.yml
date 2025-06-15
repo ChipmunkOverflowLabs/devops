@@ -1,0 +1,3 @@
+dnsProviderType: "cloudflare"
+dnsUpdateIntervalSeconds: 300
+apiAuthenticationKey: "apiToken12345"
