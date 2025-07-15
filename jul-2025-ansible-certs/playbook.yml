@@ -1,0 +1,30 @@
+- name: Generate Local Self-Signed SSL Certificates
+  hosts: certHosts
+  become: true
+  vars_files:
+    - vars/certVars.yml
+  tasks:
+    - name: Install openssl package
+      apt:
+        name: openssl
+        state: present
+        update_cache: yes
+
+    - name: Generate private key file
+      openssl_privatekey:
+        path: "{{ certPrivateKeyPath }}"
+        size: 2048
+
+    - name: Generate certificate signing request
+      openssl_csr:
+        path: "/tmp/local.csr"
+        privatekey_path: "{{ certPrivateKeyPath }}"
+        common_name: "{{ certDomainName }}"
+
+    - name: Generate self-signed certificate file
+      openssl_certificate:
+        path: "{{ certPublicKeyPath }}"
+        privatekey_path: "{{ certPrivateKeyPath }}"
+        csr_path: "/tmp/local.csr"
+        provider: selfsigned
+        selfsigned_not_after: "+{{ certificateValidityDays }}d"

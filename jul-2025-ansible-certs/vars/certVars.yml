@@ -1,0 +1,4 @@
+certDomainName: "local.internal"
+certificateValidityDays: 365
+certPrivateKeyPath: "/etc/ssl/private/local.key"
+certPublicKeyPath: "/etc/ssl/certs/local.crt"
