@@ -1,0 +1,19 @@
+- name: Apply Virtual Memory Sysctl Optimizations
+  hosts: tuningHosts
+  become: true
+  vars_files:
+    - vars/tuningVars.yml
+  tasks:
+    - name: Optimize VM swappiness setting
+      sysctl:
+        name: vm.swappiness
+        value: "{{ vmSwappinessValue }}"
+        state: present
+        reload: yes
+
+    - name: Optimize VFS cache pressure setting
+      sysctl:
+        name: vm.vfs_cache_pressure
+        value: "{{ vfsCachePressureValue }}"
+        state: present
+        reload: yes
