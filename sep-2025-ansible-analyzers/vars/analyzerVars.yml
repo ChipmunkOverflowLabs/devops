@@ -1,0 +1,3 @@
+installTcpdump: true
+installTshark: true
+tsharkVersion: "wireshark-common"

@@ -1,0 +1,18 @@
+- name: Install Network Diagnostics Packet Analyzers
+  hosts: analyzerHosts
+  become: true
+  vars_files:
+    - vars/analyzerVars.yml
+  tasks:
+    - name: Install tcpdump package
+      apt:
+        name: tcpdump
+        state: present
+        update_cache: yes
+      when: installTcpdump
+
+    - name: Install tshark package
+      apt:
+        name: tshark
+        state: present
+      when: installTshark
