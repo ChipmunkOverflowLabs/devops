@@ -1,0 +1,34 @@
+- name: Install and Configure Logstash Logging Pipeline
+  hosts: logstashHosts
+  become: true
+  vars_files:
+    - vars/logstashVars.yml
+  tasks:
+    - name: Install Logstash logging package
+      apt:
+        name: logstash
+        state: present
+        update_cache: yes
+      notify: restartLogstash
+
+    - name: Write pipeline configuration file
+      copy:
+        content: |
+          input {
+            beats {
+              port => {{ logstashPort }}
+            }
+          }
+          output {
+            elasticsearch {
+              hosts => ["http://{{ elasticsearchHostAddress }}:9200"]
+            }
+          }
+        dest: /etc/logstash/conf.d/pipeline.conf
+      notify: restartLogstash
+
+  handlers:
+    - name: restartLogstash
+      service:
+        name: logstash
+        state: restarted

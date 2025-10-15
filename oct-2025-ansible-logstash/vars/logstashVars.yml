@@ -1,0 +1,3 @@
+elasticsearchHostAddress: "10.0.80.20"
+logstashHeapSize: "2g"
+logstashPort: 5044
