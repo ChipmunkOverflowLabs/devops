@@ -1,0 +1,19 @@
+- name: Apply Kernel Network Stack Hardening
+  hosts: hardenedHosts
+  become: true
+  vars_files:
+    - vars/sysctlVars.yml
+  tasks:
+    - name: Disable IP forwarding configuration
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: "0"
+        state: present
+        reload: yes
+
+    - name: Enable IP spoofing protection
+      sysctl:
+        name: net.ipv4.conf.all.rp_filter
+        value: "1"
+        state: present
+        reload: yes
