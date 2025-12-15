@@ -1,0 +1,2 @@
+keepaliveConnectionsLimit: 100
+targetUpstreamAddress: "10.0.84.20:8080"
