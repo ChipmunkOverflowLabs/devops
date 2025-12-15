@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: grpc-canary-split-route
+  namespace: default
+  labels:
+    deploymentScope: "canaryTrafficSplit"
+spec:
+  parentRefs:
+  - name: api-gateway
+  rules:
+  - backendRefs:
+    - name: telemetry-stable-service
+      port: 9000
+      weight: 90
+    - name: telemetry-canary-service
+      port: 9000
+      weight: 10
