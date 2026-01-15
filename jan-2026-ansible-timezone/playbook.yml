@@ -1,0 +1,16 @@
+- name: Synchronize System Timezone and NTP configurations
+  hosts: timeHosts
+  become: true
+  vars_files:
+    - vars/timezoneVars.yml
+  tasks:
+    - name: Set timezone to target value
+      timezone:
+        name: "{{ targetTimezoneName }}"
+      notify: restartCron
+
+  handlers:
+    - name: restartCron
+      service:
+        name: cron
+        state: restarted
