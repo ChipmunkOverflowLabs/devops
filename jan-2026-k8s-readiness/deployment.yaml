@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readiness-gate-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: readiness-app
+  template:
+    metadata:
+      labels:
+        app: readiness-app
+        deploymentScope: "productionReadiness"
+    spec:
+      readinessGates:
+      - conditionType: "targetGroupHealthy"
+      containers:
+      - name: main-server
+        image: nginx:1.27.1
+        ports:
+        - containerPort: 80
+          name: httpPort
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
