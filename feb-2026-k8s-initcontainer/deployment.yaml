@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-volume-app
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: init-app
+  template:
+    metadata:
+      labels:
+        app: init-app
+        appScope: "initSetup"
+    spec:
+      volumes:
+      - name: sharedDataVolume
+        emptyDir: {}
+      initContainers:
+      - name: init-writer
+        image: busybox:1.36.1
+        command: ['sh', '-c', 'echo "Hello from Init" > /tmp/shared/index.html']
+        volumeMounts:
+        - name: sharedDataVolume
+          mountPath: /tmp/shared
+      containers:
+      - name: main-reader
+        image: nginx:1.27.1
+        volumeMounts:
+        - name: sharedDataVolume
+          mountPath: /usr/share/nginx/html
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
