@@ -1,0 +1,18 @@
+- name: Configure Rsyslog Remote Forwarding Rules
+  hosts: loggingHosts
+  become: true
+  vars_files:
+    - vars/rsyslogVars.yml
+  tasks:
+    - name: Write forwarding destination rule config
+      copy:
+        content: |
+          *.* @{{ rsyslogServerAddress }}:{{ rsyslogServerPort }}
+        dest: /etc/rsyslog.d/50-forward.conf
+      notify: restartRsyslog
+
+  handlers:
+    - name: restartRsyslog
+      service:
+        name: rsyslog
+        state: restarted

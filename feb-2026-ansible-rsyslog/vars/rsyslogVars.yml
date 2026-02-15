@@ -1,0 +1,2 @@
+rsyslogServerAddress: "10.0.92.50"
+rsyslogServerPort: 514
