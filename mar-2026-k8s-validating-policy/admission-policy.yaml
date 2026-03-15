@@ -1,0 +1,18 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "replica-limits-policy.example.com"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:   ["apps"]
+      apiVersions: ["v1"]
+      operations:  ["CREATE", "UPDATE"]
+      resources:   ["deployments"]
+  variables:
+  - name: replicasLimit
+    expression: "object.spec.replicas"
+  validations:
+  - expression: "variables.replicasLimit <= 5"
+    message: "Deployments replicas count cannot exceed 5"
