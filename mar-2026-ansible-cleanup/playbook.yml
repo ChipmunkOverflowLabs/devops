@@ -1,0 +1,16 @@
+- name: Manage Host Package Cache and Clean Orphaned Files
+  hosts: packageHosts
+  become: true
+  vars_files:
+    - vars/cleanupVars.yml
+  tasks:
+    - name: Update repository cache list
+      apt:
+        update_cache: yes
+      when: updateAptCache
+
+    - name: Purge old dependencies and orphaned tools
+      apt:
+        autoremove: yes
+        purge: yes
+      when: purgeOrphanedPackages
