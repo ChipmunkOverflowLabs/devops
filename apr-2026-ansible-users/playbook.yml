@@ -1,0 +1,23 @@
+- name: Provision User Accounts and Keys
+  hosts: userHosts
+  become: true
+  vars_files:
+    - vars/userVars.yml
+  tasks:
+    - name: Ensure target group exists
+      group:
+        name: "{{ userGroupMembership }}"
+        state: present
+
+    - name: Create deployer user account
+      user:
+        name: "{{ userAccountName }}"
+        group: "{{ userGroupMembership }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Set authorized key for user
+      authorized_key:
+        user: "{{ userAccountName }}"
+        state: present
+        key: "{{ sshPublicKeyContent }}"

@@ -1,0 +1,3 @@
+userAccountName: "deployer"
+sshPublicKeyContent: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ..."
+userGroupMembership: "wheel"
