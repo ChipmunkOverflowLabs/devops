@@ -1,0 +1,3 @@
+dockerImageName: "nginx:alpine"
+containerInstanceName: "telemetryStaticServer"
+exposedPortNumber: 8081

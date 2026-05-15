@@ -1,0 +1,19 @@
+- name: Run Nginx Docker Container Service
+  hosts: dockerHosts
+  become: true
+  vars_files:
+    - vars/dockerVars.yml
+  tasks:
+    - name: Ensure Docker SDK for python is present
+      pip:
+        name: docker
+        state: present
+
+    - name: Pull and launch telemetry container instance
+      community.docker.docker_container:
+        name: "{{ containerInstanceName }}"
+        image: "{{ dockerImageName }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ exposedPortNumber }}:80"
