@@ -1,0 +1,23 @@
+- name: Apply UFW Firewall Rule Settings
+  hosts: firewallHosts
+  become: true
+  vars_files:
+    - vars/firewallVars.yml
+  tasks:
+    - name: Allow SSH access from admin network subnet
+      community.general.ufw:
+        rule: allow
+        src: "{{ allowedSshAddress }}"
+        port: 22
+        proto: tcp
+
+    - name: Allow HTTP access ports
+      community.general.ufw:
+        rule: allow
+        port: "{{ allowedHttpPort }}"
+        proto: tcp
+
+    - name: Enable UFW service
+      community.general.ufw:
+        state: enabled
+        logging: "{{ firewallLoggingLevel }}"
